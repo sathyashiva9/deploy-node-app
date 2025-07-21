@@ -39,6 +39,10 @@ jobs:
         echo "Pushing image: $IMAGE"
         docker push $IMAGE
 
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin --quiet
+
     - name: Deploy to GKE
       run: |
         gcloud container clusters get-credentials ${{ vars.GKE_CLUSTER_NAME }} --zone ${{ vars.GCP_ZONE }}
