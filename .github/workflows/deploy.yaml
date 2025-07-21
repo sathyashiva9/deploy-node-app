@@ -51,6 +51,8 @@ jobs:
     - name: Print Service External IP
       run: |
         echo "🔄 Waiting for External IP to be assigned..."
+        kubectl get service node-gke-service
+        kubectl get pods
         for i in {1..30}; do
           EXTERNAL_IP=$(kubectl get service node-gke-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           if [[ -n "$EXTERNAL_IP" ]]; then
@@ -61,3 +63,6 @@ jobs:
         done
         echo "❌ External IP was not assigned in time."
         exit 1
+
+
+    
