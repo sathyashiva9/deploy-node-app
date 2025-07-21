@@ -1,3 +1,9 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches: [ "main" ]  # ✅ Trigger workflow only when code is pushed to main
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
