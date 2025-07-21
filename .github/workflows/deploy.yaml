@@ -1,0 +1,43 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches: [ "main" ]  # ✅ Trigger workflow only when code is pushed to main
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: dev  # 👈 Must match the environment name you created
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ vars.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Configure Docker for GCR
+      run: gcloud auth configure-docker
+
+    - name: Build Docker image
+      run: |
+        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository }}"
+        echo "Building image: $IMAGE"
+        docker build -t $IMAGE .
+
+    - name: Push Docker image to GCR
+      run: |
+        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository }}"
+        echo "Pushing image: $IMAGE"
+        docker push $IMAGE
+
+    - name: Deploy to GKE
+      run: |
+        gcloud container clusters get-credentials ${{ vars.GKE_CLUSTER_NAME }} --zone ${{ vars.GCP_ZONE }}
+        kubectl apply -f kubernetes/deployment.yaml
+       
