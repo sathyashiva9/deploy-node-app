@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: node-gke-app
-        image: gcr.io/lucky-kayak-466413-q3/node-gke-app
+        image: gcr.io/lucky-kayak-466413-q3/sathyashiva9/deploy-node-app
         ports:
         - containerPort: 8080
 ---
