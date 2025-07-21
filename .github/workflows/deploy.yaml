@@ -29,13 +29,13 @@ jobs:
 
     - name: Build Docker image
       run: |
-        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository##*/ }}"
+        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository }}"
         echo "Building image: $IMAGE"
         docker build -t $IMAGE .
 
     - name: Push Docker image to GCR
       run: |
-        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository##*/ }}"
+        IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ github.repository }}"
         echo "Pushing image: $IMAGE"
         docker push $IMAGE
 
